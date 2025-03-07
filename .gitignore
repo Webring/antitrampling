@@ -1,0 +1,38 @@
+# Общие исключения для всех папок
+**/node_modules/
+**/.DS_Store
+**/Thumbs.db
+**/.env
+**/*.log
+**/*.pid
+**/*.swp
+**/*.swo
+**/*.swn
+
+# Исключения для фронтенда (React + Vite)
+/frontend/dist/
+/frontend/.vite/
+/frontend/.parcel-cache/
+/frontend/.eslintcache
+/frontend/yarn.lock
+/frontend/package-lock.json
+/frontend/.turbo/
+/frontend/.pnp/
+/frontend/pnpm-lock.yaml
+
+# Исключения для бэкенда (Python)
+/backend/__pycache__/
+/backend/*.pyc
+/backend/.venv/
+/backend/venv/
+/backend/.mypy_cache/
+/backend/.pytest_cache/
+/backend/.ruff_cache/
+/backend/db.sqlite3
+/backend/instance/
+/backend/.coverage
+
+# Файлы IDE
+**/.idea/
+**/.vscode/
+**/*.iml
