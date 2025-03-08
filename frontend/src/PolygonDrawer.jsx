@@ -84,8 +84,9 @@ const PolygonDrawer = () => {
             const distance = Math.hypot(firstPoint.x - lastPoint.x, firstPoint.y - lastPoint.y);
 
             if (distance < 10) {
+                // Закрываем полигон, не добавляя последнюю точку
                 const newPolygon = {
-                    points: [...currentPoints],
+                    points: currentPoints.slice(0, -1), // Убираем последнюю точку
                     color: Math.random() > 0.5 ? "red" : "green",
                 };
                 setPolygons([...polygons, newPolygon]);
@@ -132,9 +133,15 @@ const PolygonDrawer = () => {
     return (
         <>
             <div>
-                <button onClick={() => setMode("draw")} disabled={mode === "draw"}>Рисовать</button>
-                <button onClick={() => setMode("select")} disabled={mode === "select"}>Выбирать</button>
-                <button onClick={() => setMode("edit")} disabled={mode === "edit"}>Редактировать</button>
+                <button onClick={() => setMode("draw")} disabled={mode === "draw"}>
+                    Рисовать
+                </button>
+                <button onClick={() => setMode("select")} disabled={mode === "select"}>
+                    Выбирать
+                </button>
+                <button onClick={() => setMode("edit")} disabled={mode === "edit"}>
+                    Редактировать
+                </button>
             </div>
             <Stage
                 ref={stageRef}

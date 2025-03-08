@@ -1,10 +1,10 @@
 import './App.css'
-import PolygonDrawer from "./PolygonDrawer.jsx";
+import FieldEdit from "./FieldEdit.jsx";
 
 function App() {
   return (
     <>
-      <PolygonDrawer/>
+      <FieldEdit scene_width={1920} scene_height={1080}/>
     </>
   )
 }
