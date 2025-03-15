@@ -13,7 +13,7 @@ class Dijkstra:
         self.load_map()
 
     def __repr__(self):
-        pass
+        return f'Dijkstra({self.image_path})'
 
     def load_map(self):
         self.img = cv2.imread(self.image_path)
@@ -119,6 +119,8 @@ class Dijkstra:
 
 if __name__ == "__main__":
     dijkstra = Dijkstra('nstu.png')
+    print(dijkstra)
     path = dijkstra.astar()
     print(path)
     dijkstra.visualize_path(path)
+
