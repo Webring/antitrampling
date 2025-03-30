@@ -21,9 +21,9 @@
 /frontend/pnpm-lock.yaml
 
 # Исключения для бэкенда (Python)
-/backend/__pycache__/
-/backend/*.pyc
-/backend/.venv/
+**/__pycache__/
+**//*.pyc
+**/.venv/
 /backend/venv/
 /backend/.mypy_cache/
 /backend/.pytest_cache/

@@ -38,6 +38,7 @@ const ZoomAndScrollStage = ({scene_width, scene_height, ...props}) => {
                 width={scene_width}
                 height={scene_height}
                 ref={stageRef}
+                {...props}
 
                 style={{transformOrigin: 'center center'}}
                 className="shadow-sm bg-white rounded-lg"
