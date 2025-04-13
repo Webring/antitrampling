@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {Modal, Spin, Progress, Button} from "antd";
+import {Modal, Spin, Progress} from "antd";
 
 const LoadingModal = ({task, setTask, getStatus}) => {
     const [progress, setProgress] = useState(0);

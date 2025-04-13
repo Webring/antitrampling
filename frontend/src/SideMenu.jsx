@@ -10,7 +10,7 @@ import {
     FileOutlined,
     FileTextOutlined,
     FileZipOutlined, FormatPainterOutlined,
-    NodeIndexOutlined, PauseCircleTwoTone,
+    NodeIndexOutlined, PauseCircleTwoTone, SettingOutlined,
     ZoomInOutlined,
     ZoomOutOutlined
 } from "@ant-design/icons";
@@ -117,6 +117,14 @@ const SideMenu = ({socket_status, ...props}) => {
                 >
                     Найти путь
                 </Menu.Item>}
+
+                <Menu.Item
+                    key="settings"
+                    icon={<SettingOutlined />}
+                    onClick={() => {props.setSettingsVisible(true)}}
+                >
+                    Настройки
+                </Menu.Item>
 
                 <Menu.Item
                     key="zoom_in"

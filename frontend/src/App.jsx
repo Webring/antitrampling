@@ -8,6 +8,7 @@ import SideMenu from "./SideMenu.jsx";
 import {SOCKET_STATUSES} from "./WebsocketStatuses.js";
 import {MODE} from "./FieldEdit/consts.js";
 import LoadingModal from "./LoadingModal.jsx";
+import SettingsModal from "./SettingsModal.jsx";
 
 
 function App() {
@@ -24,13 +25,17 @@ function App() {
     const [currentTask, setCurrentTask] = useState(null)
 
     const [consoleVisible, setConsoleVisible] = useState(false);
+    const [settingsVisible, setSettingsVisible] = useState(false);
+    const [settings, setSettings] = useState({host: "localhost:8765", tension: 1});
+
+    const [modalWindow, setModalWindow] = useState(null);
 
     const [messageApi, contextHolder] = message.useMessage();
 
 
     function connectSocket() {
         setSocketStatus(SOCKET_STATUSES.PENDING);
-        const ws = new WebSocket("ws://localhost:8765"); // Замените на ваш WebSocket сервер
+        const ws = new WebSocket(`ws://${settings.host}`); // Замените на ваш WebSocket сервер
         setSocket(ws);
         ws.onopen = () => {
             setSocketStatus(SOCKET_STATUSES.CONNECTED);
@@ -51,10 +56,10 @@ function App() {
             } else if ("status" in data) {// Если мы получили состояние таску
                 if (data.status !== "pending") {
 
-                    if (data.status === "error"){
+                    if (data.status === "error") {
                         messageApi.error(data.result.message);
                     }
-                    if (data.status === "success"){
+                    if (data.status === "success") {
                         messageApi.success(data.result.message);
                         setPaths(data.result.paths);
                     }
@@ -170,11 +175,12 @@ function App() {
                 findPath={findPath}
                 exportSceneFunc={exportScene}
                 loadSceneFunc={loadScene}
+                setSettingsVisible={setSettingsVisible}
             />
             <Layout>
                 <FieldEdit
-                    scene_width={1920}
-                    scene_height={1080}
+                    scene_width={size.width}
+                    scene_height={size.height}
                     mode={mode}
                     setMode={setMode}
                     polygons={polygons}
@@ -183,6 +189,18 @@ function App() {
                     setTrajectory={setTrajectory}
                     paths={paths}
                 />
+
+
+                {settingsVisible &&
+                    <SettingsModal
+                    isModalOpen={settingsVisible}
+                    setIsModalOpen={setSettingsVisible}
+                    settings={settings}
+                    setSettings={setSettings}
+                    />
+                }
+
+
                 {consoleVisible &&
                     socket &&
                     <WebSocketConsole
