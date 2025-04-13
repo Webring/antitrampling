@@ -38,6 +38,15 @@ export default function SettingsModal({isModalOpen, setIsModalOpen, settings, se
                         }
                     />
                 </label>
+                <label className="flex flex-col text-sm">
+                    Фон
+                    <Input
+                        value={tempSettings.background_url}
+                        onChange={(e) =>
+                            setTempSettings({...tempSettings, background_url: e.target.value})
+                        }
+                    />
+                </label>
 
                 <label className="flex flex-col text-sm">
                     Натяжение (tension)

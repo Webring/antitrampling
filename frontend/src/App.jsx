@@ -26,7 +26,12 @@ function App() {
 
     const [consoleVisible, setConsoleVisible] = useState(false);
     const [settingsVisible, setSettingsVisible] = useState(false);
-    const [settings, setSettings] = useState({host: "localhost:8765", tension: 1});
+    const [settings, setSettings] = useState({
+        host: "localhost:8765",
+        tension: 1,
+        background_type: "image",
+        background_url: "",
+    });
 
     const [modalWindow, setModalWindow] = useState(null);
 
@@ -188,6 +193,7 @@ function App() {
                     trajectory={trajectory}
                     setTrajectory={setTrajectory}
                     paths={paths}
+                    settings={settings}
                 />
 
 

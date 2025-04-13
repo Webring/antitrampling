@@ -6,10 +6,10 @@ import PolygonsLayer from "./FieldEdit/PolygonsLayer.jsx";
 import ContextMenuPopup from "./FieldEdit/ContextMenuPopup.jsx";
 import EditLayer from "./FieldEdit/EditLayer.jsx";
 import TrajectoryLayer from "./FieldEdit/TrajectoryLayer.jsx";
-import {Layer, Line} from "react-konva";
+import {Layer, Line, Image as KonvaImage} from "react-konva";
 
 
-const FieldEdit = ({scene_width, scene_height, mode, setMode, polygons, setPolygons, trajectory, setTrajectory, paths}) => {
+const FieldEdit = ({scene_width, scene_height, mode, setMode, polygons, setPolygons, trajectory, setTrajectory, paths, settings}) => {
 
     const [lastPolygonType, setLastPolygonType] = useState(POLYGON_TYPE.GRASS);
     const [lastPolygonId, setLastPolygonId] = useState(0);
@@ -94,6 +94,18 @@ const FieldEdit = ({scene_width, scene_height, mode, setMode, polygons, setPolyg
     }, [polygons])
 
 
+    const [image, setImage] = useState(null);
+
+    useEffect(() => {
+        const img = new window.Image();
+        img.crossOrigin = 'Anonymous'; // важно для кросс-доменных изображений
+        img.src = settings.background_url;
+        img.onload = () => {
+            setImage(img);
+        };
+    }, [settings.background_url]);
+
+
     return (
         <>
             <ZoomAndScrollStage
@@ -102,6 +114,21 @@ const FieldEdit = ({scene_width, scene_height, mode, setMode, polygons, setPolyg
                 onContextMenu={handleRightClick}
                 onMouseDown={closeContextMenu}
             >
+                <Layer>
+
+                    {
+                        settings.background_url &&
+                        image &&
+                        <KonvaImage
+                            image={image}
+                            x={0}
+                            y={0}
+                            width={scene_width}
+                            height={scene_height}
+                        />}
+                </Layer>
+
+
 
                 <PolygonsLayer
                     polygons={polygons}
