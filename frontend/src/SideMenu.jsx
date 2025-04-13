@@ -1,17 +1,16 @@
 import React, {useState} from 'react';
-import {Badge, Layout, Menu} from "antd";
+import {Layout, Menu} from "antd";
 import {
     AppstoreOutlined,
     CheckCircleTwoTone,
     CloseCircleTwoTone,
     CodeOutlined,
-    EditOutlined,
     EyeOutlined,
     FileAddOutlined,
     FileOutlined,
     FileTextOutlined,
     FileZipOutlined, FormatPainterOutlined,
-    NodeIndexOutlined,
+    NodeIndexOutlined, PauseCircleTwoTone,
     ZoomInOutlined,
     ZoomOutOutlined
 } from "@ant-design/icons";
@@ -24,7 +23,7 @@ const {Header, Content, Footer, Sider} = Layout;
 const WEBSOCKET_STATUS_ICONS = {
     [SOCKET_STATUSES.ERROR]: <CloseCircleTwoTone twoToneColor="#ff0808"/>
     ,
-    [SOCKET_STATUSES.PENDING]: <CheckCircleTwoTone twoToneColor="#ffff08"/>
+    [SOCKET_STATUSES.PENDING]: <PauseCircleTwoTone twoToneColor="#ffc700"/>
     ,
     [SOCKET_STATUSES.CONNECTED]: <CheckCircleTwoTone twoToneColor="#52c41a"/>
 }

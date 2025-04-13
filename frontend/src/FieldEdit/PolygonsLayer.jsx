@@ -3,10 +3,19 @@ import {Layer, Line} from "react-konva";
 import {TYPE_COLORS} from "./consts.js";
 
 const PolygonsLayer = ({polygons, changePolygon}) => {
+    function groupPairs(arr) {
+        const result = [];
+        for (let i = 0; i < arr.length; i += 2) {
+            result.push([arr[i], arr[i + 1]]);
+        }
+        return result;
+    }
+
     function onDragEnd(event){
         const polygon = event.target
         const polygonId = polygon.attrs.polygonId;
-        changePolygon(polygonId, {points: polygon.attrs.points})
+
+        changePolygon(polygonId, {points: groupPairs(polygon.attrs.points)})
     }
 
     return (
