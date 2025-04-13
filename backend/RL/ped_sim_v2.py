@@ -203,96 +203,7 @@ def get_paths(matrix, poi, pedestrians, simulation_steps=1000):
 
     return all_paths
 
-
-# def simulate(data):
-#     def bresenham_line(x0, y0, x1, y1):
-#         """Алгоритм Брезенхема для построения линии между двумя точками."""
-#         points = []
-#         dx = abs(x1 - x0)
-#         dy = abs(y1 - y0)
-#         sx = 1 if x0 < x1 else -1
-#         sy = 1 if y0 < y1 else -1
-#         err = dx - dy
-#
-#         while True:
-#             points.append((x0, y0))
-#             if x0 == x1 and y0 == y1:
-#                 break
-#             e2 = 2 * err
-#             if e2 > -dy:
-#                 err -= dy
-#                 x0 += sx
-#             if e2 < dx:
-#                 err += dx
-#                 y0 += sy
-#
-#         return points
-#
-#     def fill_polygon(matrix, contour, fill_value):
-#         """Заполняем область внутри контура."""
-#         min_x = max(min(x for x, y in contour), 0)
-#         max_x = min(max(x for x, y in contour), matrix.shape[1] - 1)
-#         min_y = max(min(y for x, y in contour), 0)
-#         max_y = min(max(y for x, y in contour), matrix.shape[0] - 1)
-#
-#         for y in range(min_y, max_y + 1):
-#             inside = False
-#             for x in range(min_x, max_x + 1):
-#                 if (x, y) in contour:
-#                     inside = not inside
-#                 if inside:
-#                     matrix[y, x] = fill_value
-#
-#     def generate_matrix(data):
-#         """Генерируем матрицу и находим стартовую точку."""
-#         height, width = 1080, 1920
-#         matrix = np.ones((height, width), dtype=int) * 1  # Все клетки изначально проходимые (белые)
-#
-#         for fig_id, fig_data in data.items():
-#             type_value = 2 if fig_data['type'] == 'Трава' else 0
-#             points = fig_data['points']
-#             contour = set()
-#
-#             # Добавляем проверку и сортировку точек
-#             if len(points) < 3:
-#                 raise ValueError("Для создания полигона нужно минимум 3 точки")
-#
-#             # Замыкаем контур
-#             points = points + [points[0]]
-#
-#             for i in range(len(points)):
-#                 x0, y0 = points[i]
-#                 x1, y1 = points[(i + 1) % len(points)]
-#                 contour.update(bresenham_line(x0, y0, x1, y1))
-#
-#             for x, y in contour:
-#                 if 0 <= x < width and 0 <= y < height:
-#                     matrix[y, x] = type_value
-#
-#             fill_polygon(matrix, contour, type_value)
-#
-#         while True:
-#             start_x = random.randint(0, width - 1)
-#             start_y = random.randint(0, height - 1)
-#             if matrix[start_y, start_x] in (1, 2):
-#                 return matrix, (start_y, start_x)  # Меняем порядок на (y, x)
-#
-#     # Пример входных данных
-#     # data = {
-#     #     '0': {
-#     #         'type': 'Трава',
-#     #         'points': [[743, 301], [655, 447], [558, 435], [560, 559], [667, 551], [660, 468], [725, 465], [751, 548],
-#     #                    [865, 532], [841, 438], [775, 438]]
-#     #     }
-#     # }
-#
-#     matrix, start_point = generate_matrix(data)
-#     start = [start_point]
-#     poi = generate_poi(matrix, num_poi=3)
-#     peds = simulate_pedestrians(matrix, poi, 100, start)
-#     visualize(matrix, poi, peds, frames=1000)
-#     # all_paths = get_paths(matrix, poi, peds)
-def simulate(data):
+def simulate(data, trajectory):
     def bresenham_line(x0, y0, x1, y1):
         """Алгоритм Брезенхема для построения линии между двумя точками."""
         points = []
@@ -383,38 +294,28 @@ def simulate(data):
     # ...
 
     matrix, start_point = generate_matrix(data)
+
     start = [start_point]
-    poi = generate_poi(matrix, num_poi=3)
-    peds = simulate_pedestrians(matrix, poi, 100, start)
+    # start = [tuple(trajectory[0][::-1])]
+    # start = [(2,2)]
+    print(matrix[start[0][0], start[0][1]])
+    # start = [(1512,353)]
+    # poi = generate_poi(matrix, num_poi=3)
+    poi = {}
+    for point in trajectory:
+        final = tuple(point[::-1])
+        poi[final] = np.random.uniform(0.5, 1.5)
+    print(poi)
+    print(start)
+    peds = simulate_pedestrians(matrix, poi, 10, start)
     # visualize(matrix, poi, peds, frames=1000)
     all_paths = get_paths(matrix, poi, peds)
     return all_paths
 
-if __name__ == '__main__':
-    # # Инициализация данных
-    # matrix = load_map("nstu.png")
-    # poi = generate_poi(matrix, num_poi=3)
-    # pedestrians = simulate_pedestrians(matrix, poi, 100)
-    #
-    # # Вариант 1: Визуализация
-    # # visualize(matrix, poi, pedestrians, frames=1000)
-    #
-    # # Вариант 2: Получение путей
-    # all_paths = get_paths(matrix, poi, pedestrians)
-    # print("Все пути агентов:", all_paths)
-    # print(len(all_paths))
 
-    # data = {
-    #     '0': {
-    #         'type': 'Трава',
-    #         'points': [[743, 301], [655, 447], [558, 435], [560, 559], [667, 551], [660, 468], [725, 465], [751, 548],
-    #                    [865, 532], [841, 438], [775, 438]]
-    #     }
-    # }
-    data = {"0": {"type": "Трава", "points": [[760, 360], [690, 630], [1223, 603], [1037, 323]]},
-            "1": {"type": "Здание", "points": [[907, 625], [907, 933], [1097, 720]]},
-            "2": {"type": "Здание", "points": [[800, 30], [703, 237], [877, 325]]},
-            "3": {"type": "Здание", "points": [[1265, 330], [1273, 580], [1678, 540]]},
-            # "4": {"type": "Забор", "points": [[1048, 325], [1230, 588], [1238, 583], [1060, 317]]}
-            }
-    simulate(data)
+if __name__ == '__main__':
+    data = {'0': {'type': 'Трава', 'points': [[783, 98], [520, 312], [1077, 435], [1053, 167]]},
+            '1': {'type': 'Здание', 'points': [[267, 352], [582, 365], [577, 443], [180, 442], [190, 383]]}}
+    trajectory = [[1108, 203], [158,168]]
+    print(simulate(data, trajectory))
+# {(735, 112): 1.0093274110208887, (759, 63): 0.6767134786324427, (661, 1193): 0.9755114037011006}
