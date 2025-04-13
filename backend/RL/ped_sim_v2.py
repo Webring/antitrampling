@@ -2,12 +2,14 @@ from PIL import Image
 import numpy as np
 import heapq
 import matplotlib
+import random
+import multiprocessing as mp
+from functools import partial
 
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import matplotlib.colors as mcolors
-import random
 
 
 def load_map(image_path):
@@ -58,13 +60,12 @@ def a_star_poi(matrix, start, end, poi_weights, beta=0.1, randomness=0.2, curios
         current = heapq.heappop(open_set)[1]
 
         if current == end:
-            # Восстанавливаем путь с включением стартовой точки
             path = []
             while current in came_from:
                 path.append(current)
                 current = came_from[current]
-            path.append(start)  # Добавляем стартовую точку
-            return path[::-1]  # Разворачиваем порядок
+            path.append(start)
+            return path[::-1]
 
         for neighbor in get_neighbors(matrix, current):
             tentative_g = g_score[current] + cost(matrix, current, neighbor, randomness)
@@ -115,22 +116,21 @@ class Pedestrian:
         self.trail = [start_pos]
         self.planned_paths = []
 
-    def update_goal(self, poi, matrix):
-        if not self.reached:
-            self.goal = select_goal(self.pos, poi)
-            if self.goal:
-                new_path = a_star_poi(matrix, self.pos, self.goal, poi,
-                                      beta=0.3,
-                                      randomness=self.risk_factor,
-                                      curiosity=self.curiosity)
-                if new_path:
-                    converted_path = [(p[1], p[0]) for p in new_path]
-                    self.planned_paths.append(converted_path)
-                    self.path = new_path.copy()
+    def update_goal(self, matrix, poi, beta=0.3):
+        self.goal = select_goal(self.pos, poi)
+        if self.goal:
+            new_path = a_star_poi(matrix, self.pos, self.goal, poi,
+                                  beta=beta,
+                                  randomness=self.risk_factor,
+                                  curiosity=self.curiosity)
+            if new_path:
+                simplified_path = simplify_path(matrix, new_path)
+                converted_path = [(p[1], p[0]) for p in simplified_path]
+                self.planned_paths.append(converted_path)
+                self.path = new_path.copy()
 
     def move(self, matrix):
         if self.path and not self.reached:
-            # Перемещаемся сразу на 3 шага за раз (можно регулировать число)
             for _ in range(min(3, len(self.path))):
                 next_pos = self.path.pop(0)
                 self.pos = next_pos
@@ -139,11 +139,15 @@ class Pedestrian:
                     self.reached = True
                     break
 
+def parallel_update_goal(ped_data, matrix, poi, beta):
+    ped = Pedestrian(**ped_data)
+    ped.update_goal(matrix, poi, beta)
+    return ped
 
 def simulate_pedestrians(matrix, poi, num_pedestrians=50, start_positions=None):
-    # start_positions = [(117, 190)]
     if start_positions is None:
-        start_positions = [(117, 190)]  # Дефолтные стартовые позиции
+        start_positions = [(117, 190)]
+
     pedestrians = [
         Pedestrian(
             start_pos=start_positions[np.random.choice(len(start_positions))],
@@ -151,20 +155,59 @@ def simulate_pedestrians(matrix, poi, num_pedestrians=50, start_positions=None):
             curiosity=np.random.uniform(0.05, 0.2)
         ) for _ in range(num_pedestrians)
     ]
-    for ped in pedestrians:
-        ped.update_goal(poi, matrix)
+
+    ped_data_list = [
+        {'start_pos': ped.pos, 'risk_factor': ped.risk_factor, 'curiosity': ped.curiosity}
+        for ped in pedestrians
+    ]
+
+    with mp.Pool() as pool:
+        updated_peds = pool.starmap(
+            partial(parallel_update_goal, matrix=matrix, poi=poi, beta=0.3),
+            [(data,) for data in ped_data_list]
+        )
+
+    for old_ped, new_ped in zip(pedestrians, updated_peds):
+        old_ped.goal = new_ped.goal
+        old_ped.path = new_ped.path
+        old_ped.planned_paths = new_ped.planned_paths
+
     return pedestrians
 
 
 def step_simulation(pedestrians, poi, matrix):
+    need_update = []
     for ped in pedestrians:
         if ped.reached or not ped.goal:
-            ped.update_goal(poi, matrix)
+            need_update.append(ped)
+
+    if not need_update:
+        return
+
+    args_list = []
+    for ped in need_update:
+        goal = select_goal(ped.pos, poi)
+        if goal:
+            args = (matrix, ped.pos, goal, poi, 0.3, ped.risk_factor, ped.curiosity)
+            args_list.append(args)
+
+    with mp.Pool() as pool:
+        paths = pool.starmap(a_star_poi, args_list)
+
+    for i, path in enumerate(paths):
+        ped = need_update[i]
+        if path:
+            simplified = simplify_path(matrix, path)
+            converted_path = [(p[1], p[0]) for p in simplified]
+            ped.planned_paths.append(converted_path)
+            ped.path = path.copy()
+            ped.goal = args_list[i][2]
+
+    for ped in pedestrians:
         ped.move(matrix)
 
 
 def visualize(matrix, poi, pedestrians, frames=1000, interval=30):
-    """Визуализация движения агентов с анимацией"""
     custom_cmap = mcolors.ListedColormap(["red", "white", "green"])
 
     fig, ax = plt.subplots()
@@ -193,17 +236,59 @@ def visualize(matrix, poi, pedestrians, frames=1000, interval=30):
 
 
 def get_paths(matrix, poi, pedestrians, simulation_steps=1000):
-    """Получение путей без визуализации"""
     for _ in range(simulation_steps):
         step_simulation(pedestrians, poi, matrix)
+    return [ped.planned_paths[0] for ped in pedestrians]
 
-    all_paths = []
-    for ped in pedestrians:
-        all_paths.extend(ped.planned_paths)
+def line_of_sight(matrix, start, end):
+    (y0, x0) = start
+    (y1, x1) = end
+    dx = abs(x1 - x0)
+    dy = abs(y1 - y0)
+    sx = 1 if x0 < x1 else -1
+    sy = 1 if y0 < y1 else -1
+    err = dx - dy
 
-    return all_paths
+    current_x = x0
+    current_y = y0
+
+    while True:
+        if current_y < 0 or current_y >= matrix.shape[0] or current_x < 0 or current_x >= matrix.shape[1]:
+            return False
+        if matrix[current_y][current_x] == 0:
+            return False
+        if current_x == x1 and current_y == y1:
+            break
+        e2 = 2 * err
+        if e2 > -dy:
+            err -= dy
+            current_x += sx
+        if e2 < dx:
+            err += dx
+            current_y += sy
+
+    return True
 
 
+def simplify_path(matrix, path):
+    if len(path) < 2:
+        return path.copy()
+    simplified = [path[0]]
+    current_index = 0
+    while current_index < len(path) - 1:
+        next_index = len(path) - 1
+        while next_index > current_index + 1:
+            start_node = path[current_index]
+            end_node = path[next_index]
+            if line_of_sight(matrix, start_node, end_node):
+                simplified.append(end_node)
+                current_index = next_index
+                break
+            next_index -= 1
+        else:
+            simplified.append(path[current_index + 1])
+            current_index += 1
+    return simplified
 
 def simulate(data, trajectory):
     def bresenham_line(x0, y0, x1, y1):
@@ -292,8 +377,6 @@ def simulate(data, trajectory):
             if matrix[start_y, start_x] in (1, 2):
                 return matrix, (start_y, start_x)
 
-    # Далее оставшиеся функции (generate_poi, simulate_pedestrians, visualize и т.д.)
-    # ...
 
     matrix, _ = generate_matrix(data)
 
@@ -305,7 +388,7 @@ def simulate(data, trajectory):
         poi[final] = np.random.uniform(0.5, 1.5)
     print(poi)
     print(start)
-    peds = simulate_pedestrians(matrix, poi, 3, start)
+    peds = simulate_pedestrians(matrix, poi, 10, start)
     # visualize(matrix, poi, peds, frames=1000)
     all_paths = get_paths(matrix, poi, peds)
     return all_paths
@@ -317,5 +400,5 @@ if __name__ == '__main__':
     # trajectory = [[1108, 203], [158, 168]]
     data = {'0': {'type': 'Здание', 'points': [[351, 396], [381, 494], [567, 455], [552, 515], [414, 558], [375, 531], [397, 646], [709, 535], [624, 309]]}}
 
-    trajectory =  [[200, 100], [500, 500]]
+    trajectory =  [[350, 243], [500, 500]]
     print(simulate(data, trajectory))
