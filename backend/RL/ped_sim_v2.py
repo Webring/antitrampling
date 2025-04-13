@@ -203,6 +203,8 @@ def get_paths(matrix, poi, pedestrians, simulation_steps=1000):
 
     return all_paths
 
+
+
 def simulate(data, trajectory):
     def bresenham_line(x0, y0, x1, y1):
         """Алгоритм Брезенхема для построения линии между двумя точками."""
@@ -293,29 +295,27 @@ def simulate(data, trajectory):
     # Далее оставшиеся функции (generate_poi, simulate_pedestrians, visualize и т.д.)
     # ...
 
-    matrix, start_point = generate_matrix(data)
+    matrix, _ = generate_matrix(data)
 
-    start = [start_point]
-    # start = [tuple(trajectory[0][::-1])]
-    # start = [(2,2)]
+    start = [tuple(trajectory[0][::-1])]
     print(matrix[start[0][0], start[0][1]])
-    # start = [(1512,353)]
-    # poi = generate_poi(matrix, num_poi=3)
     poi = {}
-    for point in trajectory:
+    for point in trajectory[1:]:
         final = tuple(point[::-1])
         poi[final] = np.random.uniform(0.5, 1.5)
     print(poi)
     print(start)
-    peds = simulate_pedestrians(matrix, poi, 10, start)
+    peds = simulate_pedestrians(matrix, poi, 3, start)
     # visualize(matrix, poi, peds, frames=1000)
     all_paths = get_paths(matrix, poi, peds)
     return all_paths
 
 
 if __name__ == '__main__':
-    data = {'0': {'type': 'Трава', 'points': [[783, 98], [520, 312], [1077, 435], [1053, 167]]},
-            '1': {'type': 'Здание', 'points': [[267, 352], [582, 365], [577, 443], [180, 442], [190, 383]]}}
-    trajectory = [[1108, 203], [158,168]]
+    # data = {'0': {'type': 'Трава', 'points': [[783, 98], [520, 312], [1077, 435], [1053, 167]]},
+    #         '1': {'type': 'Здание', 'points': [[267, 352], [582, 365], [577, 443], [180, 442], [190, 383]]}}
+    # trajectory = [[1108, 203], [158, 168]]
+    data = {'0': {'type': 'Здание', 'points': [[351, 396], [381, 494], [567, 455], [552, 515], [414, 558], [375, 531], [397, 646], [709, 535], [624, 309]]}}
+
+    trajectory =  [[200, 100], [500, 500]]
     print(simulate(data, trajectory))
-# {(735, 112): 1.0093274110208887, (759, 63): 0.6767134786324427, (661, 1193): 0.9755114037011006}
