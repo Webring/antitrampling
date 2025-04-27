@@ -145,7 +145,7 @@ const FieldEdit = ({scene_width, scene_height, mode, setMode, polygons, setPolyg
                             lineCap="round"
                             lineJoin="round"
                             dash={[10, 20]}
-                            tension={1}
+                            tension={0.1}
                         />
                     ))}
 

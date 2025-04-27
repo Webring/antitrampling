@@ -3,6 +3,7 @@ import time
 
 from api import start_server, ApiHandler
 from backend.RL.ped_sim_v2 import simulate
+from backend.RL.model_norm import start_model
 
 
 # example
@@ -17,14 +18,8 @@ from backend.RL.ped_sim_v2 import simulate
 
 def find_path(polygons, trajectory):
     print(polygons, trajectory)
-    paths = simulate(polygons, trajectory)
-    # for i in range(random.randint(1, 10)):
-    #     # path = []
-    #     for p in range(random.randint(5, 20)):
-    #         x = random.randint(0, 1920)
-    #         y = random.randint(0, 1080)
-    #         path.append((x, y))
-    #     paths.append(path)
+    paths = [start_model(polygons, trajectory)]
+    print(paths)
     return {"message": "Маршрут построен",
             "paths": paths}
 

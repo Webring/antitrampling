@@ -388,7 +388,7 @@ def simulate(data, trajectory):
         poi[final] = np.random.uniform(0.5, 1.5)
     print(poi)
     print(start)
-    peds = simulate_pedestrians(matrix, poi, 10, start)
+    peds = simulate_pedestrians(matrix, poi, 20, start)
     # visualize(matrix, poi, peds, frames=1000)
     all_paths = get_paths(matrix, poi, peds)
     return all_paths
@@ -398,7 +398,7 @@ if __name__ == '__main__':
     # data = {'0': {'type': 'Трава', 'points': [[783, 98], [520, 312], [1077, 435], [1053, 167]]},
     #         '1': {'type': 'Здание', 'points': [[267, 352], [582, 365], [577, 443], [180, 442], [190, 383]]}}
     # trajectory = [[1108, 203], [158, 168]]
-    data = {'0': {'type': 'Здание', 'points': [[351, 396], [381, 494], [567, 455], [552, 515], [414, 558], [375, 531], [397, 646], [709, 535], [624, 309]]}}
+    data = {'0': {'type': 'Здание', 'points': [[759, 226], [779, 316], [708, 447], [593, 468], [552, 508], [521, 529], [501, 554], [439, 646], [413, 766], [414, 867], [510, 862], [645, 832], [788, 835], [884, 861], [895, 788], [984, 643], [1020, 578], [1025, 546], [1018, 409], [984, 314], [986, 245], [973, 214], [958, 216], [932, 250], [901, 277], [854, 280], [812, 250]]}}
 
-    trajectory =  [[350, 243], [500, 500]]
+    trajectory =  [[331, 242], [589, 136]]
     print(simulate(data, trajectory))
