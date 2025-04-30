@@ -2,7 +2,7 @@ name: Vite Github Pages Deploy
 
 on:
   push:
-    branches: [main"]
+    branches: ["main"]
   workflow_dispatch:
 
 permissions:
