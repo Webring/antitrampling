@@ -15,7 +15,6 @@
 /frontend/.parcel-cache/
 /frontend/.eslintcache
 /frontend/yarn.lock
-/frontend/package-lock.json
 /frontend/.turbo/
 /frontend/.pnp/
 /frontend/pnpm-lock.yaml
