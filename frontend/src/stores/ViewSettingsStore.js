@@ -8,7 +8,7 @@ const BackgroundType = {
 }
 
 
-class ViewSettings {
+class ViewSettingsStore {
     backgroundType = BackgroundType.Clear;
 
     backgroundUrl = ""
@@ -18,4 +18,7 @@ class ViewSettings {
     constructor() {
         makeAutoObservable(this);
     }
+
 }
+
+export default ViewSettingsStore();

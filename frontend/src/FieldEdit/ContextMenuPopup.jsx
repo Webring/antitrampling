@@ -1,7 +1,6 @@
 import React from 'react';
-import { NEXT_TYPE } from "./consts.js";
 
-const ContextMenuPopup = ({ contextMenu, changeDraggable, nextPolygonType, deletePolygon }) => {
+const ContextMenuPopup = ({contextMenu, changeDraggable, nextPolygonType, deletePolygon}) => {
     if (!contextMenu.visible || !contextMenu.element) {
         return null;
     }
@@ -21,7 +20,7 @@ const ContextMenuPopup = ({ contextMenu, changeDraggable, nextPolygonType, delet
             <button
                 onClick={nextPolygonType}
                 className="p-2 rounded border-b-1 border-gray-100 hover:bg-gray-100 active:bg-gray-200">
-                Сделать "{NEXT_TYPE[contextMenu.element.attrs.polygonType]}"
+                Сделать ""
             </button>
             <button
                 className="p-2 rounded border-b-1 border-gray-100 hover:bg-gray-100 active:bg-gray-200">

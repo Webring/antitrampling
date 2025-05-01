@@ -1,13 +1,14 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import LayerWithSize from "./LayerWithSize.jsx";
-import {Line, Rect} from "react-konva";
-import {TYPE_COLORS} from "./consts.js";
+import {Line} from "react-konva";
+import FieldStore, {polygonColor} from "../stores/FieldStore.js";
+import EditorStore from "../stores/EditorStore.js";
 
 function distance(x1, y1, x2, y2) {
     return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 }
 
-const DrawLayer = ({width, height, polygonType, ...props}) => {
+const DrawingLayer = () => {
     const [isDrawing, setIsDrawing] = useState(false);
     const [points, setPoints] = useState([]);
 
@@ -32,7 +33,7 @@ const DrawLayer = ({width, height, polygonType, ...props}) => {
         if (points.length > 2) {
             const [px, py] = points[0];
             if (distance(px, py, x, y) < 10) {
-                props.addPolygon(points);
+                FieldStore.addPolygon(points, EditorStore.currentPolygonType)
                 endDrawing()
                 return
             }
@@ -62,18 +63,20 @@ const DrawLayer = ({width, height, polygonType, ...props}) => {
     }, [points, cursorPos]);
 
     return (
-        <LayerWithSize width={width} height={height}
-                       onMouseDown={onMouseDown}
-                       onMouseMove={onMouseMove}
+        <LayerWithSize
+            width={FieldStore.width}
+            height={FieldStore.height}
+            onMouseDown={onMouseDown}
+            onMouseMove={onMouseMove}
         >
             <Line points={points.flat(1)}
-                  stroke={TYPE_COLORS[polygonType]}
+                  stroke={polygonColor[EditorStore.currentPolygonType]}
                   strokeWidth={5}
                   lineCap="round"
                   lineJoin="round"
             />
             <Line points={cursorLine.flat(1)}
-                  stroke={TYPE_COLORS[polygonType]}
+                  stroke={polygonColor[EditorStore.currentPolygonType]}
                   strokeWidth={5}
                   lineCap="round"
                   lineJoin="round"
@@ -82,4 +85,4 @@ const DrawLayer = ({width, height, polygonType, ...props}) => {
     );
 };
 
-export default DrawLayer;
+export default DrawingLayer;

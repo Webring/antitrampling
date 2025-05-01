@@ -1,22 +1,40 @@
 import {makeAutoObservable} from "mobx";
 
-class FieldStore {
-    // Класс поля, здесь содержиться лишь информация о поле
+export const polygonType = {
+    grass: 1, building: 2, fence: 3
+}
 
+export const polygonColor = {
+    [polygonType.grass]: "green", [polygonType.building]: "red", [polygonType.fence]: "blue",
+}
+
+export const polygonRussianLabel = {
+    [polygonType.grass]: "Трава", [polygonType.building]: "Здание", [polygonType.fence]: "Забор",
+}
+
+class FieldStore {
     width = 500
     height = 500
 
-    polygons = {}
-    last_polygon_id = 0
+    polygons = []
 
     constructor() {
         makeAutoObservable(this)
     }
 
-    setPolygons(polygons) {
-        this.polygons = polygons
+    new(width, height) {
+        this.width = width
+        this.height = height
     }
 
-
-
+    addPolygon(points, type = polygonType.grass) {
+        let newPolygon = {
+            type: type,
+            points: points,
+        }
+        this.polygons.push(newPolygon)
+        console.log(this.polygons)
+    }
 }
+
+export default new FieldStore()
