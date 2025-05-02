@@ -2,22 +2,20 @@ import React from 'react';
 import {Layer, Line} from "react-konva";
 import FieldStore, {polygonColor} from "../stores/FieldStore.js";
 import {observer} from "mobx-react-lite";
+import EditorStore, {modeType} from "../stores/EditorStore.js";
 
 const PolygonsLayer = observer(() => {
-    // function groupPairs(arr) {
-    //     const result = [];
-    //     for (let i = 0; i < arr.length; i += 2) {
-    //         result.push([arr[i], arr[i + 1]]);
-    //     }
-    //     return result;
-    // }
+    function onDragEnd(event){
+        const polygon = event.target
+        const deltaX = polygon.x()
+        const deltaY = polygon.y()
+        const polygonId = polygon.attrs.polygonId;
 
-    // function onDragEnd(event){
-    //     const polygon = event.target
-    //     const polygonId = polygon.attrs.polygonId;
-    //
-    //     changePolygon(polygonId, {points: groupPairs(polygon.attrs.points)})
-    // }
+        FieldStore.movePolygon(polygonId, deltaX, deltaY)
+
+        polygon.x(0)
+        polygon.y(0)
+    }
 
     return (
         <Layer>
@@ -28,7 +26,8 @@ const PolygonsLayer = observer(() => {
                     closed={true}
                     polygonId={id}
                     fill={polygonColor[polygon.type]}
-                    // ondragEnd={onDragEnd}
+                    draggable={EditorStore.mode === modeType.drag}
+                    ondragEnd={onDragEnd}
                 />
 
             ))}

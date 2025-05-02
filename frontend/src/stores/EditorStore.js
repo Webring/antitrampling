@@ -4,21 +4,55 @@ import {polygonType} from "./FieldStore.js";
 
 export const modeType = {
     draw: "Рисовать",
-    view: "Смотреть"
+    view: "Смотреть",
+    drag: "Двигать",
 }
+
+export const backgroundType = {
+    clear: "none",
+    image: "image",
+    grid: "grid",
+    points: "points"
+}
+
 
 const MAX_ZOOM = 5.0
 const MIN_ZOOM = 0.1
 
 class EditorStore {
-    mode = modeType.draw;
+    mode = modeType.view;
 
     zoom = 1.0
 
     currentPolygonType = polygonType.grass
 
+    contextMenu = {visible: false, x: 0, y: 0, element: null}
+
+    background = {
+        type: new window.Image(),
+        image: "",
+        cellSize: 0,
+    }
+
+
     constructor() {
         makeAutoObservable(this)
+    }
+
+    closeContextMenu() {
+        this.contextMenu = {visible: false, x: 0, y: 0, element: null}
+    }
+
+    setContextMenu(contextMenu) {
+        this.contextMenu = contextMenu;
+    }
+
+    get contextMenuIsVisible() {
+        return this.contextMenu.visible && this.contextMenu.element;
+    }
+
+    get contextElementPolygonId() {
+        return this.contextMenu.element.attrs.polygonId
     }
 
     enableDrawingMode() {
@@ -27,6 +61,10 @@ class EditorStore {
 
     enableViewMode() {
         this.mode = modeType.view;
+    }
+
+    enableDragMode() {
+        this.mode = modeType.drag
     }
 
     selectGrassPolygonType() {
@@ -43,14 +81,25 @@ class EditorStore {
 
     zoomIn() {
         this.zoom = Math.min(this.zoom + 0.1, MAX_ZOOM);
-        console.log("zoom in", this.zoom);
     };
 
     zoomOut() {
         this.zoom = Math.max(this.zoom - 0.1, MIN_ZOOM)
-        console.log("zoom out", this.zoom);
-
     };
+
+    clearBackground() {
+        this.background.type = backgroundType.clear
+        this.background.url = ""
+        this.background.cellSize = 0
+    }
+
+    setBackgroundImage(url) {
+        this.background.type = backgroundType.image
+        this.background.url = url
+        this.background.cellSize = 0
+    }
+
+
 }
 
 export default new EditorStore()
