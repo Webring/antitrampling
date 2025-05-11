@@ -29,9 +29,9 @@ class EditorStore {
     contextMenu = {visible: false, x: 0, y: 0, element: null}
 
     background = {
-        type: new window.Image(),
-        image: "",
-        cellSize: 0,
+        type: backgroundType.clear,
+        image: null,
+        cellSize: 5,
     }
 
 
@@ -89,16 +89,17 @@ class EditorStore {
 
     clearBackground() {
         this.background.type = backgroundType.clear
-        this.background.url = ""
-        this.background.cellSize = 0
     }
 
-    setBackgroundImage(url) {
+    setBackgroundImage(image) {
         this.background.type = backgroundType.image
-        this.background.url = url
-        this.background.cellSize = 0
+        this.background.image = image
     }
 
+    setBackgroundGrid(cellSize, usePoints=false) {
+        this.background.cellSize = cellSize
+        this.background.type = usePoints ? backgroundType.points : backgroundType.grid
+    }
 
 }
 

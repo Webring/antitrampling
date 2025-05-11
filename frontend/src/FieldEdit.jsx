@@ -43,7 +43,6 @@ const FieldEdit = observer(() => {
                 onContextMenu={handleRightClick}
                 onMouseDown={() => EditorStore.closeContextMenu()}
             >
-
                 <BackgroundLayer/>
                 <PolygonsLayer/>
                 <PathsLayer/>

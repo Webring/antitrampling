@@ -1,4 +1,7 @@
 import {makeAutoObservable} from "mobx";
+import interfaceStore from "./interfaceStore.js";
+import fieldStore from "./FieldStore.js";
+import viewStore from "./viewStore.js";
 
 const socketStatus = {
     pending: "Подключение...",
@@ -7,9 +10,11 @@ const socketStatus = {
 }
 
 class socketStore {
-    host = "localhost:8080"
+    host = "localhost:8765"
     socket = undefined
     status = socketStatus.disconnected
+
+    tasks = []
 
     constructor() {
         makeAutoObservable(this)
@@ -21,7 +26,7 @@ class socketStore {
         }
     }
 
-    setStatus(status){
+    setStatus(status) {
         this.status = status
     }
 
@@ -39,10 +44,49 @@ class socketStore {
             this.setStatus(socketStatus.disconnected)
         }
         this.socket.onmessage = (e) => {
-            console.log(e)
+            let data = JSON.parse(e.data);
+            console.log("received websocket data", data);
+            if ("uuid" in data) { // Если мы отправили таску
+                this.addTask(data.uuid)
+            } else if ("status" in data) {// Если мы получили состояние таску
+                if (data.status !== "pending") {
+                    if (data.status === "error") {
+                        interfaceStore.showErrorMessage(data.result);
+                    }
+                    if (data.status === "success") {
+                        interfaceStore.showSuccessMessage(data.result.message);
+                        console.log("paths", data.result.paths);
+                        viewStore.addPaths(data.result.paths);
+                    }
+
+                    this.removeTask(data.uuid);
+                }
+            }
         }
     }
 
+    addTask(task) {
+        this.tasks.push(task);
+    }
+
+    removeTask(uuid) {
+        this.tasks.splice(this.tasks.indexOf(uuid), 1);
+    }
+
+    getStatus(uuid) {
+        this.socket.send(JSON.stringify({
+            "type": "check",
+            "uuid": uuid
+        }));
+    }
+
+    findPath() {
+        this.socket.send(JSON.stringify({
+            "type": "find_path",
+            "polygons": fieldStore.polygons,
+            "trajectory": []
+        }));
+    }
 }
 
 export default new socketStore();

@@ -3,6 +3,7 @@ import EditorStore from "./stores/EditorStore.js";
 import {exportScene, loadScene} from "./FieldEdit/import-export.js";
 import {observer} from "mobx-react-lite";
 import socketStore from "./stores/socketStore.js";
+import interfaceStore, {modalType} from "./stores/interfaceStore.js";
 
 const SimpleToolBar = observer(() => {
     const baseBtn =
@@ -47,6 +48,9 @@ const SimpleToolBar = observer(() => {
             </div>
 
             <div className={baseGroup}>
+                <button className={baseBtn} onClick={() => interfaceStore.openModal(modalType.newMap)}>
+                    <span className="text-lg">📄</span>Новый
+                </button>
                 <button className={baseBtn} onClick={() => loadScene()}>
                     <span className="text-lg">📥</span>Импорт
                 </button>
@@ -57,7 +61,19 @@ const SimpleToolBar = observer(() => {
 
             <div className={baseGroup}>
                 <button className={baseBtn} onClick={() => socketStore.connect()}>
-                    <span className="text-lg">📡</span>{socketStore.status}
+                <span className="text-lg">📡</span>{socketStore.status}
+                </button>
+            </div>
+
+            <div className={baseGroup}>
+                <button className={baseBtn} onClick={() => socketStore.findPath()}>
+                <span className="text-lg">👣</span>Найти путь
+                </button>
+            </div>
+
+            <div className={baseGroup}>
+                <button className={baseBtn} onClick={() => interfaceStore.openModal(modalType.settings)}>
+                    <span className="text-lg">⚙️</span>Настройки
                 </button>
             </div>
         </div>
