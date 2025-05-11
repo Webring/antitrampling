@@ -8,19 +8,24 @@ import PolygonsLayer from "./FieldEdit/PolygonsLayer.jsx";
 import ContextMenuPopup from "./FieldEdit/ContextMenuPopup.jsx";
 import BackgroundLayer from "./FieldEdit/BackgroundLayer.jsx";
 import PathsLayer from "./FieldEdit/PathsLayer.jsx";
+import InterestPointsLayer from "./FieldEdit/InterestPointsLayer.jsx";
 
 const FieldEdit = observer(() => {
     const handleRightClick = (e) => {
         e.evt.preventDefault();
-        if (EditorStore.mode === modeType.draw) return;
+
         const x = e.evt.pageX;
         const y = e.evt.pageY;
         let element = e.target;
-        if (["Layer", "Stage"].includes(element.getClassName())) {
-            EditorStore.closeContextMenu()
-        } else {
-            EditorStore.setContextMenu({visible: true, x: x, y: y, element: element});
+
+        if ([modeType.view, modeType.drag].includes(EditorStore.mode)) {
+            if (["Layer", "Stage", "Circle"].includes(element.getClassName())) {
+                EditorStore.closeContextMenu()
+            } else {
+                EditorStore.setContextMenu({visible: true, x: x, y: y, element: element});
+            }
         }
+
     };
 
     useEffect(() => {
@@ -46,6 +51,7 @@ const FieldEdit = observer(() => {
                 <BackgroundLayer/>
                 <PolygonsLayer/>
                 <PathsLayer/>
+                <InterestPointsLayer/>
                 {EditorStore.mode === modeType.draw && <DrawingLayer/>}
             </ZoomAndScrollStage>
 

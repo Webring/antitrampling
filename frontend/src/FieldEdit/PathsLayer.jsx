@@ -6,7 +6,7 @@ import viewStore from "../stores/viewStore.js";
 const PathsLayer = observer(() => {
     return (
         <Layer>
-            {viewStore.paths.map((p, index) => (
+            {viewStore.paths && viewStore.paths.map((p, index) => (
                 <Line
                     key={index}
                     points={p.flat()}

@@ -8,8 +8,12 @@ class ViewStore {
     }
 
     addPaths(paths){
-        this.paths += paths;
+        this.paths = this.paths.concat(paths);
         console.log(paths);
+    }
+
+    clearPaths(){
+        this.paths = [];
     }
 }
 

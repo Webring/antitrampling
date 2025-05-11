@@ -84,7 +84,11 @@ class socketStore {
         this.socket.send(JSON.stringify({
             "type": "find_path",
             "polygons": fieldStore.polygons,
-            "trajectory": []
+            "points_of_interest": fieldStore.interestPoints,
+            "size": {
+                width: fieldStore.width,
+                height: fieldStore.height
+            }
         }));
     }
 }

@@ -5,6 +5,8 @@ import editorStore from "../stores/EditorStore.js";
 import FieldStore, {polygonType} from "../stores/FieldStore.js";
 
 const ContextMenuPopup = observer(() => {
+
+
     return (
         <div
             style={{
@@ -12,7 +14,8 @@ const ContextMenuPopup = observer(() => {
                 top: EditorStore.contextMenu.y,
                 left: EditorStore.contextMenu.x,
             }}
-            className="bg-white rounded-lg shadow-2xl p-1 flex flex-col justify-center">
+            className="bg-white rounded-lg shadow-2xl p-1 flex flex-col justify-center"
+        >
             {FieldStore.polygons[editorStore.contextElementPolygonId].type !== polygonType.grass &&
                 <button
                     onClick={() => {

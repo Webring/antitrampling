@@ -1,4 +1,4 @@
-import {makeAutoObservable} from "mobx";
+import {makeAutoObservable, toJS} from "mobx";
 
 export const polygonType = {
     grass: 1, building: 2, fence: 3
@@ -29,9 +29,20 @@ class FieldStore {
         this.polygons = []
     }
 
+    setInterestPoints(interestPoints) {
+        this.interestPoints = interestPoints
+    }
 
     setPolygons(polygons) {
         this.polygons = polygons
+    }
+
+    addInterestPoint(interestPoint) {
+        this.interestPoints.push(interestPoint)
+    }
+
+    removeInterestPoint(id) {
+        this.interestPoints.splice(id, 1)
     }
 
     addPolygon(points, type = polygonType.grass) {
@@ -46,7 +57,8 @@ class FieldStore {
         this.polygons[id]["points"] = this.polygons[id]["points"].map(point => [point[0] + deltaX, point[1] + deltaY])
     }
 
-    setPolygonType(id, type){
+
+    setPolygonType(id, type) {
         this.polygons[id].type = type
     }
 
@@ -59,7 +71,7 @@ class FieldStore {
             width: this.width,
             height: this.height,
             polygons: this.polygons,
-
+            interestPoints: this.interestPoints,
         });
     }
 
@@ -85,9 +97,10 @@ class FieldStore {
 
         this.new(data.width, data.height)
         this.setPolygons(data.polygons);
+        this.setInterestPoints(data.interestPoints); //ToDo add validation
     }
 
-    get isEmpty(){
+    get isEmpty() {
         return this.polygons.length === 0
     }
 }

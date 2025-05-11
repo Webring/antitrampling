@@ -4,6 +4,7 @@ import {exportScene, loadScene} from "./FieldEdit/import-export.js";
 import {observer} from "mobx-react-lite";
 import socketStore from "./stores/socketStore.js";
 import interfaceStore, {modalType} from "./stores/interfaceStore.js";
+import viewStore from "./stores/viewStore.js";
 
 const SimpleToolBar = observer(() => {
     const baseBtn =
@@ -23,6 +24,9 @@ const SimpleToolBar = observer(() => {
                 </button>
                 <button className={baseBtn} onClick={() => EditorStore.enableDrawingMode()}>
                     <span className="text-lg">✏️</span>Рисовать
+                </button>
+                <button className={baseBtn} onClick={() => EditorStore.enableInterestPointMode()}>
+                    <span className="text-lg">👀️</span>Точки интереса
                 </button>
             </div>
 
@@ -68,6 +72,9 @@ const SimpleToolBar = observer(() => {
             <div className={baseGroup}>
                 <button className={baseBtn} onClick={() => socketStore.findPath()}>
                 <span className="text-lg">👣</span>Найти путь
+                </button><
+                button className={baseBtn} onClick={() => viewStore.clearPaths()}>
+                <span className="text-lg">🧹</span>Убрать пути
                 </button>
             </div>
 

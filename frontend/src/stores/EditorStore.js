@@ -6,6 +6,7 @@ export const modeType = {
     draw: "Рисовать",
     view: "Смотреть",
     drag: "Двигать",
+    interestPoints: "Точки интереса"
 }
 
 export const backgroundType = {
@@ -65,6 +66,10 @@ class EditorStore {
 
     enableDragMode() {
         this.mode = modeType.drag
+    }
+
+    enableInterestPointMode() {
+        this.mode = modeType.interestPoints
     }
 
     selectGrassPolygonType() {
