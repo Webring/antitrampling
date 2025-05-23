@@ -88,6 +88,13 @@ class socketStore {
             "size": {
                 width: fieldStore.width,
                 height: fieldStore.height
+            },
+            "settings": {
+                "weights": {
+                    "fence": 5,
+                    "grass": 3,
+                    "road": 1
+                }
             }
         }));
     }

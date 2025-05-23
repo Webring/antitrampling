@@ -17,7 +17,11 @@ const InterestPointsLayer = observer(() => {
         if (e.target.attrs.interestPointId || e.target.attrs.interestPointId === 0) {
             FieldStore.removeInterestPoint(e.target.attrs.interestPointId);
         } else {
-            FieldStore.addInterestPoint([x, y])
+            FieldStore.addInterestPoint({
+                x: x,
+                y: y,
+                level: 1
+            })
 
         }
     }
@@ -25,8 +29,8 @@ const InterestPointsLayer = observer(() => {
 
     const elements = FieldStore.interestPoints.map((point, id) => <Circle
         key={id}
-        x={point[0]}
-        y={point[1]}
+        x={point.x}
+        y={point.y}
         radius={5}
         fill="#c8a2c8"
         interestPointId={id}
