@@ -5,6 +5,7 @@ import interfaceStore, {modalType} from "../stores/interfaceStore.js";
 import socketStore from "../stores/socketStore.js";
 import editorStore, {backgroundType} from "../stores/EditorStore.js";
 import {UploadOutlined} from "@ant-design/icons";
+import algorithmStore from "../stores/algorithmStore.js";
 
 const {TabPane} = Tabs;
 
@@ -36,6 +37,8 @@ const SettingsModal = observer(() => {
         form.validateFields().then(values => {
             console.log(values);
             socketStore.setHost(values.host);
+            algorithmStore.setGrassWeight(values.grassWeight);
+            algorithmStore.setFenceWeight(values.fenceWeight);
 
             switch(values.backgroundMode) {
                 case backgroundModes.clear:
@@ -185,6 +188,39 @@ const SettingsModal = observer(() => {
 
                                 return null;
                             }}
+                        </Form.Item>
+                    </Form>
+                </TabPane>
+                <TabPane tab="Веса" key="3" forceRender>
+                    <Form
+                        form={form}
+                        layout="vertical"
+                        initialValues={{
+                            grassWeight: algorithmStore.grassWeight,
+                            fenceWeight: algorithmStore.fenceWeight,
+                        }}
+                    >
+                        <Form.Item
+                            label='Вес для газонов'
+                            name="grassWeight"
+                        >
+                            <InputNumber
+                                min={1}
+                                max={5}
+                                step={0.1}
+                                style={{ width: '100%' }}
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            label='Вес для заборов'
+                            name="fenceWeight"
+                        >
+                            <InputNumber
+                                min={1}
+                                max={20}
+                                step={0.2}
+                                style={{ width: '100%' }}
+                            />
                         </Form.Item>
                     </Form>
                 </TabPane>

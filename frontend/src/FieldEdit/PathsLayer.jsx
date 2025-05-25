@@ -1,7 +1,7 @@
 import React from 'react';
 import {Layer, Line} from "react-konva";
 import {observer} from "mobx-react-lite";
-import viewStore from "../stores/viewStore.js";
+import viewStore from "../stores/algorithmStore.js";
 
 const PathsLayer = observer(() => {
     return (

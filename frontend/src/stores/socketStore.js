@@ -1,7 +1,7 @@
 import {makeAutoObservable} from "mobx";
 import interfaceStore from "./interfaceStore.js";
 import fieldStore from "./FieldStore.js";
-import viewStore from "./viewStore.js";
+import viewStore from "./algorithmStore.js";
 
 const socketStatus = {
     pending: "Подключение...",

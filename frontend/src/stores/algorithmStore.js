@@ -1,10 +1,20 @@
 import {makeAutoObservable} from "mobx";
 
-class ViewStore {
+class AlgorithmStore {
     paths = []
+    grassWeight = 3.0
+    fenceWeight = 5.0
 
     constructor() {
         makeAutoObservable(this);
+    }
+
+    setGrassWeight(value) {
+        this.grassWeight = value;
+    }
+
+    setFenceWeight(value) {
+        this.fenceWeight = value;
     }
 
     addPaths(paths){
@@ -17,4 +27,4 @@ class ViewStore {
     }
 }
 
-export default new ViewStore();
+export default new AlgorithmStore();

@@ -4,7 +4,7 @@ import {exportScene, loadScene} from "./FieldEdit/import-export.js";
 import {observer} from "mobx-react-lite";
 import socketStore from "./stores/socketStore.js";
 import interfaceStore, {modalType} from "./stores/interfaceStore.js";
-import viewStore from "./stores/viewStore.js";
+import viewStore from "./stores/algorithmStore.js";
 
 const SimpleToolBar = observer(() => {
     const baseBtn =
