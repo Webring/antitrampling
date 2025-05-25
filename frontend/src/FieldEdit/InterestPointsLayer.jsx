@@ -31,7 +31,7 @@ const InterestPointsLayer = observer(() => {
         key={id}
         x={point.x}
         y={point.y}
-        radius={5}
+        radius={7}
         fill="#c8a2c8"
         interestPointId={id}
         draggable={EditorStore.mode === modeType.interestPoints}

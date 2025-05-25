@@ -1,6 +1,6 @@
 import React from 'react';
 import {observer} from 'mobx-react-lite';
-import {Modal, Tabs, Form, Input, Upload, Button, Radio, Switch, InputNumber} from 'antd';
+import {Modal, Tabs, Form, Input, Upload, Button, Radio, Switch, InputNumber, Slider} from 'antd';
 import interfaceStore, {modalType} from "../stores/interfaceStore.js";
 import socketStore from "../stores/socketStore.js";
 import editorStore, {backgroundType} from "../stores/EditorStore.js";
@@ -35,10 +35,10 @@ const SettingsModal = observer(() => {
 
     const handleOk = () => {
         form.validateFields().then(values => {
-            console.log(values);
             socketStore.setHost(values.host);
             algorithmStore.setGrassWeight(values.grassWeight);
             algorithmStore.setFenceWeight(values.fenceWeight);
+            editorStore.setBackgroundOpacity(values.backgroundOpacity);
 
             switch(values.backgroundMode) {
                 case backgroundModes.clear:
@@ -109,6 +109,8 @@ const SettingsModal = observer(() => {
                             backgroundMode: backgroundModes.clear,
                             usePoints: editorStore.background.type === backgroundType.points,
                             cellSize: editorStore.background.cellSize,
+                            backgroundOpacity: editorStore.background.opacity,
+
                         }}
                     >
                         <Form.Item
@@ -121,6 +123,13 @@ const SettingsModal = observer(() => {
                                 <Radio value={backgroundModes.imageFile}>Загрузка изображения</Radio>
                                 <Radio value={backgroundModes.grid}>Сетка</Radio>
                             </Radio.Group>
+                        </Form.Item>
+
+                        <Form.Item
+                            name="backgroundOpacity"
+                            label="Прозрачность заднего фона"
+                        >
+                            <Slider min={0} max={1} step={0.1} />
                         </Form.Item>
 
                         <Form.Item

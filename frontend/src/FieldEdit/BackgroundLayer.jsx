@@ -21,6 +21,7 @@ const BackgroundLayer = observer(() => {
                     points={[x, 0, x, height]}
                     stroke="#ddd"
                     strokeWidth={1}
+                    opacity={editorStore.background.opacity}
                 />
             );
         }
@@ -32,6 +33,7 @@ const BackgroundLayer = observer(() => {
                     points={[0, y, width, y]}
                     stroke="#ddd"
                     strokeWidth={1}
+                    opacity={editorStore.background.opacity}
                 />
             );
         }
@@ -54,6 +56,7 @@ const BackgroundLayer = observer(() => {
                         y={y}
                         radius={2}
                         fill="#999"
+                        opacity={editorStore.background.opacity}
                     />
                 );
             }
@@ -74,6 +77,7 @@ const BackgroundLayer = observer(() => {
                     y={0}
                     width={FieldStore.width}
                     height={FieldStore.height}
+                    opacity={editorStore.background.opacity}
                 />
             }
 

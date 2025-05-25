@@ -33,6 +33,7 @@ class EditorStore {
         type: backgroundType.clear,
         image: null,
         cellSize: 5,
+        opacity: 1.0
     }
 
 
@@ -96,12 +97,23 @@ class EditorStore {
         this.background.type = backgroundType.clear
     }
 
+    setBackgroundOpacity(opacity) {
+        if (opacity > 1) {
+            opacity = 1
+        }
+
+        if (opacity < 0) {
+            opacity = 0
+        }
+        this.background.opacity = opacity
+    }
+
     setBackgroundImage(image) {
         this.background.type = backgroundType.image
         this.background.image = image
     }
 
-    setBackgroundGrid(cellSize, usePoints=false) {
+    setBackgroundGrid(cellSize, usePoints = false) {
         this.background.cellSize = cellSize
         this.background.type = usePoints ? backgroundType.points : backgroundType.grid
     }
