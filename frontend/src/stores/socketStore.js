@@ -2,6 +2,7 @@ import {makeAutoObservable} from "mobx";
 import interfaceStore from "./interfaceStore.js";
 import fieldStore from "./FieldStore.js";
 import viewStore from "./algorithmStore.js";
+import algorithmStore from "./algorithmStore.js";
 
 const socketStatus = {
     pending: "Подключение...",
@@ -91,9 +92,8 @@ class socketStore {
             },
             "settings": {
                 "weights": {
-                    "fence": 5,
-                    "grass": 3,
-                    "road": 1
+                    "fence": algorithmStore.fenceWeight,
+                    "grass": algorithmStore.grassWeight,
                 }
             }
         }));
