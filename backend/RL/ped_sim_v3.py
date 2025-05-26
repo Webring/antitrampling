@@ -127,7 +127,10 @@ def process_section(i, map_matrix, weights):
                 base_weight = weights['grass']
             else:
                 # Любой другой случай (дорога или смешанные типы)
-                base_weight = weights['road']
+                try:
+                    base_weight = weights['road']
+                except:
+                    base_weight = 1.0
 
             # Модификаторы для разных типов поверхности
             if current_type != neighbor_type:
@@ -474,19 +477,19 @@ def start(width, height, data, points,weights=None):
 
     combs = generate_random_point_combinations(points)
     paths = []
-    print(combs)
-    print("tt")
+    # print(combs)
+    # print("tt")
     import traceback
     try:
         for comb in combs:
-            print("Start node exists:", tuple(comb[0][::-1]) in graph.nodes)
-            print("Goal node exists:", tuple(comb[1][::-1]) in graph.nodes)
+            # print("Start node exists:", tuple(comb[0][::-1]) in graph.nodes)
+            # print("Goal node exists:", tuple(comb[1][::-1]) in graph.nodes)
             path = find_path(graph, tuple(comb[0][::-1]), tuple(comb[1][::-1]))
-            print(path)
+            # print(path)
             path = simplify_path(path)
-            print(path)
+            # print(path)
             smooth_paths = smooth_path(path, map_matrix)
-            print(smooth_paths)
+            # print(smooth_paths)
             paths.append(smooth_paths)
     except Exception as e:
         traceback.print_exc()

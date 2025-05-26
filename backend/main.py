@@ -32,9 +32,9 @@ def find_path(polygons, points_of_interest, size,settings):
     pol = {}
     pol["polygons"] = polygons
 
-    paths = start(width, height, pol, points_of_interest)
+    paths = start(width, height, pol, points_of_interest, weights)
 
-    print("ttt", polygons, points_of_interest)
+    # print("ttt", polygons, points_of_interest)
 
 
 
