@@ -46,7 +46,7 @@ class FieldStore {
     }
 
     changeInterestPointLevel(id, delta) {
-        let levelDelta = delta / 100
+        let levelDelta = Math.round(delta / Math.abs(delta))
         let lastLevel = this.interestPoints[id].level
         this.interestPoints[id].level = Math.min(9, Math.max( 1, lastLevel + levelDelta))
         console.log(this.interestPoints[id].level)
