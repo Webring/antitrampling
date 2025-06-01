@@ -1,4 +1,4 @@
-import {makeAutoObservable, toJS} from "mobx";
+import {makeAutoObservable} from "mobx";
 
 export const polygonType = {
     grass: 1, building: 2, fence: 3
@@ -43,6 +43,13 @@ class FieldStore {
 
     removeInterestPoint(id) {
         this.interestPoints.splice(id, 1)
+    }
+
+    changeInterestPointLevel(id, delta) {
+        let levelDelta = delta / 100
+        let lastLevel = this.interestPoints[id].level
+        this.interestPoints[id].level = Math.min(9, Math.max( 1, lastLevel + levelDelta))
+        console.log(this.interestPoints[id].level)
     }
 
     addPolygon(points, type = polygonType.grass) {
