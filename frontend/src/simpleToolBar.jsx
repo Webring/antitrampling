@@ -16,54 +16,54 @@ const SimpleToolBar = observer(() => {
     const menuGroups = [
         {
             name: "Режимы",
-            icon: "./src/components/g.svg",
+            icon: "components/g.svg",
             items: [
-                { icon: "./src/components/eye.png", label: "Смотреть", action: () => EditorStore.enableViewMode() },
-                { icon: "./src/components/swipe.png", label: "Двигать", action: () => EditorStore.enableDragMode() },
-                { icon: "./src/components/draw.png", label: "Рисовать", action: () => EditorStore.enableDrawingMode() },
-                { icon: "./src/components/intrest.png", label: "Точки интереса", action: () => EditorStore.enableInterestPointMode() }
+                { icon: "components/eye.png", label: "Смотреть", action: () => EditorStore.enableViewMode() },
+                { icon: "components/swipe.png", label: "Двигать", action: () => EditorStore.enableDragMode() },
+                { icon: "components/draw.png", label: "Рисовать", action: () => EditorStore.enableDrawingMode() },
+                { icon: "components/intrest.png", label: "Точки интереса", action: () => EditorStore.enableInterestPointMode() }
             ]
         },
         {
             name: "Объекты",
-            icon: "./src/components/brush.png",
+            icon: "components/brush.png",
             items: [
-                { icon: "./src/components/grass.png", label: "Газон", action: () => EditorStore.selectGrassPolygonType() },
-                { icon: "./src/components/build.png", label: "Здание", action: () => EditorStore.selectBuildingPolygonType() },
-                { icon: "./src/components/garden.png", label: "Заборчик", action: () => EditorStore.selectFencePolygonType() }
+                { icon: "components/grass.png", label: "Газон", action: () => EditorStore.selectGrassPolygonType() },
+                { icon: "components/build.png", label: "Здание", action: () => EditorStore.selectBuildingPolygonType() },
+                { icon: "components/garden.png", label: "Заборчик", action: () => EditorStore.selectFencePolygonType() }
             ]
         },
         {
             name: "Масштаб",
-            icon: "./src/components/search.png",
+            icon: "components/search.png",
             items: [
-                { icon: "./src/components/add_2.png", label: "Приблизить", action: () => EditorStore.zoomIn() },
-                { icon: "./src/components/check_indeterminate_small.png", label: "Отдалить", action: () => EditorStore.zoomOut() }
+                { icon: "components/add_2.png", label: "Приблизить", action: () => EditorStore.zoomIn() },
+                { icon: "components/check_indeterminate_small.png", label: "Отдалить", action: () => EditorStore.zoomOut() }
             ]
         },
         {
             name: "Файл",
-            icon: "./src/components/folder_open.png",
+            icon: "components/folder_open.png",
             items: [
-                { icon: "./src/components/draft.png", label: "Новый", action: () => interfaceStore.openModal(modalType.newMap) },
-                { icon: "./src/components/vertical_align_bottom.png", label: "Импорт", action: () => loadScene() },
-                { icon: "./src/components/upgrade.png", label: "Экспорт", action: () => exportScene() }
+                { icon: "components/draft.png", label: "Новый", action: () => interfaceStore.openModal(modalType.newMap) },
+                { icon: "components/vertical_align_bottom.png", label: "Импорт", action: () => loadScene() },
+                { icon: "components/upgrade.png", label: "Экспорт", action: () => exportScene() }
             ]
         },
         {
             name: "Навигация",
-            icon: "./src/components/distance.png",
+            icon: "components/distance.png",
             items: [
-                { icon: "./src/components/offline_pin.png", label: "Найти путь", action: () => socketStore.findPath() },
-                { icon: "./src/components/mop.png", label: "Убрать пути", action: () => AlgorithmStore.clearPaths() }
+                { icon: "components/offline_pin.png", label: "Найти путь", action: () => socketStore.findPath() },
+                { icon: "components/mop.png", label: "Убрать пути", action: () => AlgorithmStore.clearPaths() }
             ]
         },
         {
             name: "Система",
-            icon: "./src/components/folder_managed.png",
+            icon: "components/folder_managed.png",
             items: [
-                { icon: "./src/components/mode_off_on.png", label: socketStore.status, action: () => socketStore.connect() },
-                { icon: "./src/components/set.png", label: "Настройки", action: () => interfaceStore.openModal(modalType.settings) }
+                { icon: "components/mode_off_on.png", label: socketStore.status, action: () => socketStore.connect() },
+                { icon: "components/set.png", label: "Настройки", action: () => interfaceStore.openModal(modalType.settings) }
             ]
         }
     ];
